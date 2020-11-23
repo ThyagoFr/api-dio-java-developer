@@ -1,7 +1,6 @@
 package dio.bootcamp.personapi.controller;
 
 import dio.bootcamp.personapi.dto.PersonDTO;
-import dio.bootcamp.personapi.model.PersonModel;
 import dio.bootcamp.personapi.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +38,17 @@ public class PersonController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
         return ResponseEntity.created(location).build();
     }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deletePerson(@PathVariable Long id) {
+        personService.deletePerson(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<?> putPerson(@PathVariable Long id, @RequestBody PersonDTO personDTO) {
+        personService.putPerson(id, personDTO);
+        return ResponseEntity.noContent().build();
+    }
+
 }

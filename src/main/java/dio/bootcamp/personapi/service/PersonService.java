@@ -8,9 +8,10 @@ import dio.bootcamp.personapi.model.PersonModel;
 import dio.bootcamp.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +27,7 @@ public class PersonService {
     }
 
     public PersonDTO getPerson(Long id){
-        PersonModel person = personRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Usuario nao encontrado"));
+        PersonModel person = findByID(id);
         return personMapper.toDTO(person);
     }
 
@@ -39,6 +40,20 @@ public class PersonService {
             throw new BadRequest("CPF já utilizado");
         }
         return personRepository.save(personMapper.toModel(personDTO)).getId();
+    }
+
+    public void deletePerson(Long id) {
+        PersonModel person = findByID(id);
+        personRepository.delete(person);
+    }
+
+    public void putPerson(Long id, PersonDTO personDTO) {
+        findByID(id);
+        personRepository.save(personMapper.toModel(personDTO));
+    }
+
+    private PersonModel findByID(Long id) {
+        return personRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Usuario nao encontrado"));
     }
 
 }
